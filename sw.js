@@ -3,7 +3,7 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-512.png'
+  './icons/icon-1024.png'
 ];
 
 // Instalacao - cache todos os arquivos essenciais
