@@ -1,6 +1,6 @@
 {
   "name": "Vsouza Gestão Financeira Familar",
-  "short_name": "Vsouza",
+  "short_name": "Minhas Contas",
   "description": "Aplicativo offline para controle financeiro doméstico.",
   "start_url": "./index.html",
   "display": "standalone",
