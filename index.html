@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="preto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finanças Pro | Dashboard Fullscreen Premium v3</title>
+    <style>
+        /* ==========================================================================
+           1. VARIÁVEIS E SISTEMA DE TEMAS (DESIGN SYSTEM)
+           ========================================================================== */
+        
+        /* --- TEMA PRETO ORIGINAL (PADRÃO POCO/TECLAST OLED) --- */
+        :root, html[data-theme="preto"] {
+            --bg-main: #09090b; 
+            --bg-card: #141417; 
+            --bg-input: #030303;
+            --txt-primary: #f4f4f5; 
+            --txt-muted: #a1a1aa; 
+            --purple: #a855f7; 
+            --purple-hover: #9333ea;
+            --green: #10b981; 	
+            --red: #f43f5e; 
+            --border: #27272a; 
+            --calendar-invert: invert(1);
+            --backdrop: rgba(9, 9, 11, 0.75);
+            --amber: #f59e0b;
+            --amber-hover: #d97706;
+            --blue-select: #3b82f6;
+        }
+
+        /* --- TEMA CINZA GRAFITE --- */
+        html[data-theme="cinza"] {
+            --bg-main: #212529; 
+            --bg-card: #2c3034; 
+            --bg-input: #1a1d20;
+            --txt-primary: #f8f9fa; 
+            --txt-muted: #adb5bd; 
+            --purple: #6c757d; 
+            --purple-hover: #495057;
+            --green: #198754; 
+            --red: #dc3545; 
+            --border: #343a40; 
+            --calendar-invert: invert(1);
+            --backdrop: rgba(33, 37, 41, 0.75);
+            --amber: #fd7e14;
+            --amber-hover: #d63384;
+            --blue-select: #0d6efd;
+        }
+
+        /* --- TEMA AZUL NOTURNO --- */
+        html[data-theme="azul"] {
+            --bg-main: #0f172a; 
+            --bg-card: #1e293b; 
+            --bg-input: #020617;
+            --txt-primary: #f8fafc; 
+            --txt-muted: #94a3b8; 
+            --purple: #38bdf8; 
+            --purple-hover: #0ea5e9;
+            --green: #34d399; 
+            --red: #f87171; 
+            --border: #334155;
+            --calendar-invert: invert(1);
+            --backdrop: rgba(15, 23, 42, 0.75);
+            --amber: #fbbf24;
+            --amber-hover: #f59e0b;
+            --blue-select: #0284c7;
+        }
+        /* --- TEMA BRANCO GELO --- */
+        html[data-theme="branco"] {
+            --bg-main: #f4f6f8;         
+            --bg-card: #ffffff;         
+            --bg-input: #e9ecef;        
+            --txt-primary: #2d3748;     
+            --txt-muted: #718096;       
+            --purple: #7c3aed;          
+            --purple-hover: #6d28d9;    
+            --green: #059669;           
+            --red: #e11d48;             
+            --border: #cbd5e1;          
+            --calendar-invert: invert(0);
+            --backdrop: rgba(244, 246, 248, 0.75);
+            --amber: #d97706;
+            --amber-hover: #b45309;
+            --blue-select: #4f46e5;
+        }
+
+        /* --- TEMA VERDE MENTA --- */
+        html[data-theme="verde-claro"] {
+            --bg-main: #e8f5e9; 
+            --bg-card: #ffffff; 
+            --bg-input: #f1f8e9;
+            --txt-primary: #1b5e20; 
+            --txt-muted: #558b2f; 
+            --purple: #2e7d32; 
+            --purple-hover: #1b5e20;
+            --green: #4caf50; 
+            --red: #f44336; 
+            --border: #c8e6c9; 
+            --calendar-invert: invert(0);
+            --backdrop: rgba(232, 245, 233, 0.75);
+            --amber: #e65100;
+            --amber-hover: #bf360c;
+            --blue-select: #2e7d32;
+        }
+
+        /* ==========================================================================
+           2. ESTILOS BASE E RESETS DE RECONCILIAÇÃO (ANDROID APPS LOOK)
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--txt-primary); 
+            min-height: 100vh; 
+            transition: background-color 0.25s ease, color 0.25s ease;
+            overflow-x: hidden;
+            position: relative;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        /* Container Fluido e Adaptável (Poco X6 Pro e Teclast P40 Pro) */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Otimização de rolagem nativa e invisível para tabelas */
+        .table-container::-webkit-scrollbar {
+            display: none;
+        }
+        .table-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* ==========================================================================
+           3. TOOLBAR SUPERIOR COM MARCA D'ÁGUA EM LINHA
+           ========================================================================== */
+        .header-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        /* Container de Controle Direito (Engenharia de Layout para Marca d'água + Botão) */
+        .toolbar__meta-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Marca d'água em linha elegante e sutil no topo */
+        .top-watermark {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--txt-muted);
+            opacity: 0.35;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .btn-action {
+            background-color: var(--bg-input);
+            color: var(--txt-primary);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            border-color: var(--purple);
+            background-color: var(--bg-card);
+        }
+
+        .btn-action--primary {
+            background-color: var(--purple);
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-action--primary:hover {
+            background-color: var(--purple-hover);
+        }
+
+        .btn-settings {
+            background: transparent;
+            border: none;
+            color: var(--txt-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, color 0.2s;
+        }
+
+        .btn-settings:hover {
+            color: var(--purple);
+            transform: rotate(45deg);
+        }
+
+        @media (max-width: 680px) {
+            .header-toolbar { flex-direction: column-reverse; align-items: stretch; gap: 0.75rem; }
+            .actions-group { display: grid; grid-template-columns: repeat(2, 1fr); }
+            .toolbar__meta-controls { justify-content: space-between; padding-left: 0.25rem; }
+        }
+        /* ==========================================================================
+           4. GRID COMPACTO DE 6 MÉTRICAS E RELATÓRIOS RÁPIDOS (MATERIAL DESIGN)
+           ========================================================================== */
+        .metrics-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+            gap: 0.75rem; 
+        }
+
+        @media (min-width: 1024px) {
+            .metrics-grid {
+                grid-template-columns: repeat(6, 1fr); /* Alinhamento impecável em tablets */
+            }
+        }
+
+        .metric-card { 
+            background-color: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: 14px; 
+            padding: 1rem; 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .metric-card::before { 
+            content: ''; 
+            position: absolute; 
+            left: 0; top: 0; bottom: 0; 
+            width: 4px; 
+        }
+
+        /* Identificadores Visuais e Barras Laterais dos 6 Cartões */
+        .card-total::before { background-color: var(--purple); }
+        .card-paid::before { background-color: var(--green); }
+        .card-pending::before { background-color: var(--red); }
+        .card-partial::before { background-color: var(--blue-select); } /* Novo Card */
+        .card-highest::before { background-color: var(--amber); }
+        .card-freq::before { background-color: #38bdf8; }
+
+        .metric-info span { 
+            display: block; 
+            font-size: 0.7rem; 
+            color: var(--txt-muted); 
+            margin-bottom: 0.15rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .metric-info strong { 
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-paid strong { color: var(--green); }
+        .card-pending strong { color: var(--red); }
+        .card-partial strong { color: var(--blue-select); }
+        .card-highest strong { color: var(--amber); }
+
+        .metric-card__subtext {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--txt-muted);
+            margin-top: 0.15rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* ==========================================================================
+           5. LAYOUT DA TABELA DE EXTRATO DETALHADO (ANDROID STYLE)
+           ========================================================================== */
+        .data-card { 
+            background-color: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            padding: 1.25rem; 
+            display: flex; 
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .data-header { margin-bottom: 1rem; }
+        .data-header h3 { font-size: 1.1rem; font-weight: 600; }
+
+        .table-container { 
+            overflow-x: auto; 
+            width: 100%;
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.9rem; 
+            text-align: left; 
+            white-space: nowrap; 
+        }
+
+        th, td { 
+            padding: 0.85rem 0.75rem; 
+            border-bottom: 1px solid var(--border); 
+        }
+
+        th { 
+            color: var(--txt-muted); 
+            font-weight: 600; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+
+        .col-amount { font-weight: 600; }
+
+        tr.row-paid { opacity: 0.45; }
+        tr.row-paid td { text-decoration: line-through; }
+        tr.row-paid td:first-child, 
+        tr.row-paid td:last-child,
+        tr.row-paid .origin-cell-wrapper { text-decoration: none !important; }
+
+        /* Estilização dos Componentes de Seleção (Checkboxes Nativos) */
+        .checkbox-paid {
+            accent-color: var(--green);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-partial {
+            accent-color: var(--blue-select);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* Alinhamento fluído para o texto da origem + checkbox parcial */
+        .origin-cell-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        /* ==========================================================================
+           6. ENGENHARIA DE TRANSIÇÕES SUAVES (ANIMATION ENGINE)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--backdrop);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay--open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.94);
+            transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay--open .modal-wrapper {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--txt-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* ==========================================================================
+           7. FORMULÁRIOS, BOTÕES E FEEDBACKS DE VALIDAÇÃO
+           ========================================================================== */
+        .form-group { margin-bottom: 1rem; position: relative; }
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        
+        label { 
+            display: block; font-size: 0.8rem; color: var(--txt-muted); 
+            margin-bottom: 0.3rem; font-weight: 500;
+        }
+
+        input, select { 
+            width: 100%; background-color: var(--bg-input); border: 1px solid var(--border); 
+            color: var(--txt-primary); padding: 0.65rem 0.75rem; border-radius: 10px; 
+            font-size: 0.9rem; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus, select:focus { border-color: var(--purple); }
+
+        .input-error {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.2);
+        }
+
+        .error-message {
+            color: var(--red);
+            font-size: 0.7rem;
+            margin-top: 0.2rem;
+            display: block;
+        }
+
+        .conditional-section { 
+            background: var(--bg-input); padding: 0.75rem; border-radius: 10px; 
+            margin-top: 0.5rem; border: 1px solid var(--border); 
+        }
+        .hidden { display: none !important; }
+
+        .btn-submit, .btn-secondary, .btn-delete, .btn-edit { 
+            border: none; font-weight: 600; border-radius: 10px; cursor: pointer; 
+            transition: all 0.2s ease; padding: 0.65rem 1rem; font-size: 0.88rem;
+        }
+        .btn-submit { width: 100%; background-color: var(--purple); color: #fff; margin-top: 0.5rem; }
+        .btn-submit:hover { background-color: var(--purple-hover); }
+        .btn-submit--edit { background-color: var(--amber) !important; }
+        .btn-submit--edit:hover { background-color: var(--amber-hover) !important; }
+
+        .btn-secondary { background: transparent; color: var(--txt-primary); border: 1px solid var(--border); width: 100%; }
+        .btn-secondary:hover { background-color: var(--bg-input); border-color: var(--txt-muted); }
+
+        .btn-edit { background: transparent; color: var(--purple); border: 1px solid var(--purple); padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        .btn-edit:hover { background: var(--purple); color: #fff; }
+
+        .btn-delete { background: transparent; color: var(--red); border: 1px solid var(--red); padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        .btn-delete:hover { background: var(--red); color: #fff; }
+
+        .txt-receita { color: var(--green) !important; }
+        .txt-despesa { color: var(--txt-primary) !important; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        /* ==========================================================================
+           8. PAINEL LATERAL DESLIZANTE (SETTINGS DRAWER)
+           ========================================================================== */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5); z-index: 150; opacity: 0;
+            pointer-events: none; transition: opacity 0.25s ease;
+        }
+        .drawer-overlay--open { opacity: 1; pointer-events: auto; }
+
+        .drawer-wrapper {
+            position: fixed; top: 0; right: 0; bottom: 0; width: 300px;
+            background-color: var(--bg-card); border-left: 1px solid var(--border);
+            padding: 1.5rem; box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+            transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); z-index: 151;
+        }
+        .drawer-overlay--open + .drawer-wrapper { transform: translateX(0); }
+
+        .theme-option {
+            padding: 0.75rem; border: 1px solid var(--border); border-radius: 10px;
+            margin-bottom: 0.5rem; cursor: pointer; font-weight: 500; font-size: 0.9rem;
+            transition: all 0.2s ease; background-color: var(--bg-input);
+        }
+        .theme-option:hover, .theme-option--active { border-color: var(--purple); background-color: var(--bg-card); }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="month"]::-webkit-calendar-picker-indicator { cursor: pointer; filter: var(--calendar-invert); }
+    </style>
+    <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- CONTROLADOR SUPERIOR (TOOLBAR PREMIUM COM BRANDING EM LINHA) -->
+        <header class="header-toolbar">
+            <div class="actions-group">
+                <button type="button" class="btn-action btn-action--primary" id="open-cadastro-btn">✍️ Lançar</button>
+                <button type="button" class="btn-action" id="open-filtros-btn">🔍 Filtrar</button>
+                <button type="button" class="btn-action" id="btn-export-backup">💾 Exportar</button>
+                <button type="button" class="btn-action" id="btn-import-trigger">📂 Importar</button>
+                <input type="file" id="file-import-backup" accept=".txt,text/plain" style="display: none;">
+            </div>
+            
+            <!-- COORDENAÇÃO DE BRANDING DIREITO -->
+            <div class="toolbar__meta-controls">
+                <span class="top-watermark">Vsouza </span>
+                <button type="button" class="btn-settings" id="open-settings-btn" aria-label="Configurações de Tema">⚙️</button>
+            </div>
+        </header>
+
+        <!-- PAINEL RECALCULADO DE 6 CARTÕES DE MÉTRICAS (MATERIAL DESIGN 3) -->
+        <section class="metrics-grid" aria-label="Visão Geral do Balanço">
+            <div class="metric-card card-total">
+                <div class="metric-info">
+                    <span>Saldo Geral</span>
+                    <strong id="total-amount">R$ 0,00</strong>
+                </div>
+            </div>
+            <div class="metric-card card-paid">
+                <div class="metric-info">
+                    <span>Total Receitas</span>
+                    <strong id="total-paid">R$ 0,00</strong>
+                </div>
+            </div>
+            <div class="metric-card card-pending">
+                <div class="metric-info">
+                    <span>Total Despesas</span>
+                    <strong id="total-pending">R$ 0,00</strong>
+                </div>
+            </div>
+            <!-- NOVO: CARD DE AUDITORIA DE SOMA PARCIAL -->
+            <div class="metric-card card-partial">
+                <div class="metric-info">
+                    <span>Parcial Selecionada</span>
+                    <strong id="partial-selected-amount">R$ 0,00</strong>
+                    <span class="metric-card__subtext" id="partial-selected-count">0 itens marcados</span>
+                </div>
+            </div>
+            <div class="metric-card card-highest">
+                <div class="metric-info">
+                    <span>Maior Despesa</span>
+                    <strong id="highest-expense-amount">R$ 0,00</strong>
+                    <span class="metric-card__subtext" id="highest-expense-desc">—</span>
+                </div>
+            </div>
+            <div class="metric-card card-freq">
+                <div class="metric-info">
+                    <span>Banco Mais Usado</span>
+                    <strong id="freq-institution-title">—</strong>
+                    <span class="metric-card__subtext" id="freq-institution-count">0 lançamentos</span>
+                </div>
+            </div>
+        </section>
+        <!-- LISTAGEM DO EXTRATO FULLSCREEN -->
+        <main class="data-card">
+            <div class="data-header">
+                <h3>Extrato Detalhado</h3>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;" class="text-center">Status</th>
+                            <th>Descrição</th>
+                            <th>Local</th>
+                            <th style="width: 100px;">Data</th>
+                            <th>Forma / Origem</th>
+                            <th class="text-right">Valor</th>
+                            <th style="width: 120px;" class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="finance-table-body">
+                        <!-- Injetado dinamicamente via Javascript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- POPUP: NOVO LANÇAMENTO / EDIÇÃO PREMIUM -->
+    <div id="modal-cadastro" class="modal-overlay">
+        <div class="modal-wrapper">
+            <div class="modal-header">
+                <h3 id="form-title">✍️ Novo Lançamento</h3>
+                <button type="button" class="modal-close" id="close-cadastro-btn">&times;</button>
+            </div>
+            <form id="finance-form" autocomplete="off" novalidate>
+                <div class="form-group">
+                    <label for="description">Descrição</label>
+                    <input type="text" id="description" placeholder="Ex: Supermercado" maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Local da Compra</label>
+                    <input type="text" id="location" placeholder="Ex: Shopping, Amazon, Posto Shell" maxlength="50">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="transaction-type">Tipo de Lançamento</label>
+                        <select id="transaction-type">
+                            <option value="despesa">🔻 Despesa (Saída)</option>
+                            <option value="receita">➕ Receita (Entrada)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="is-recurring">Lançamento Fixo?</label>
+                        <select id="is-recurring">
+                            <option value="nao">Não (Único)</option>
+                            <option value="sim">Sim (Recorrente)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="recurring-fields" class="hidden conditional-section form-group">
+                    <label for="recurring-months">Replicar por quantos meses seguintes?</label>
+                    <input type="number" id="recurring-months" min="1" max="12" placeholder="Ex: 3">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="amount">Valor</label>
+                        <input type="text" id="amount" placeholder="R$ 0,00">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Data</label>
+                        <input type="date" id="date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-type">Forma de Pagamento</label>
+                    <select id="payment-type">
+                        <option value="dinheiro">💵 Dinheiro</option>
+                        <option value="pix">⚡ Pix</option>
+                        <option value="debito">💳 Cartão de Débito</option>
+                        <option value="credito">💳 Cartão de Crédito</option>
+                    </select>
+                </div>
+
+                <!-- UNIFICAÇÃO SÊNIOR: BANCO OBRIGATÓRIO PARA TODAS AS TRANSAÇÕES -->
+                <div class="form-group">
+                    <label for="institution">Banco / Instituição de Origem</label>
+                    <select id="institution">
+                        <option value="">Selecione o Banco...</option>
+                        <option value="Itaú">Itaú</option>
+                        <option value="Banco do Brasil">Banco do Brasil</option>
+                        <option value="Bradesco">Bradesco</option>
+                        <option value="Santander">Santander</option>
+                        <option value="Caixa Econômica">Caixa Econômica</option>
+                        <option value="Nubank">Nubank</option>
+                        <option value="Banco Inter">Banco Inter</option>
+                        <option value="C6 Bank">C6 Bank</option>
+                        <option value="PicPay">PicPay</option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                        <option value="Outros / Carteira">Outros / Carteira</option>
+                    </select>
+                </div>
+
+                <!-- CAMPOS CONDICIONAIS EXCLUSIVOS DO CRÉDITO -->
+                <div id="card-fields" class="hidden conditional-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="due-day">Vencimento (Dia)</label>
+                            <input type="number" id="due-day" min="1" max="31" placeholder="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="is-installment">Parcelado?</label>
+                            <select id="is-installment">
+                                <option value="nao">Não</option>
+                                <option value="sim">Sim</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="installment-fields" class="hidden form-group">
+                        <label for="installments-qty">Nº Parcelas</label>
+                        <input type="number" id="installments-qty" min="2" max="72" placeholder="3">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-submit-form" class="btn-submit">Adicionar Lançamento</button>
+                <button type="button" id="btn-cancel-edit" class="btn-secondary hidden" style="margin-top: 0.5rem;">Cancelar Edição</button>
+            </form>
+        </div>
+    </div>
+    <!-- POPUP: FILTROS AVANÇADOS COM SELETOR POR BANCO/CARTÃO -->
+    <div id="modal-filtros" class="modal-overlay">
+        <div class="modal-wrapper">
+            <div class="modal-header">
+                <h3>🔍 Filtrar Lançamentos</h3>
+                <button type="button" class="modal-close" id="close-filtros-btn">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="item">Buscar por Descrição ou Local</label>
+                <input type="text" id="item" placeholder="Buscar palavra-chave...">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filter-month">Mês/Ano</label>
+                    <input type="month" id="filter-month">
+                </div>
+                <div class="form-group">
+                    <label for="filter-fortnight">Período</label>
+                    <select id="filter-fortnight">
+                        <option value="todos">Mês Completo</option>
+                        <option value="1">1ª Quinzena</option>
+                        <option value="2">2ª Quinzena</option>
+                        <option value="anual">📅 Histórico Anual</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filter-status">Situação</label>
+                    <select id="filter-status">
+                        <option value="todos">🏷️ Todos</option>
+                        <option value="pago">✅ Pagos / Recebidos</option>
+                        <option value="pendente">⏳ Pendentes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-method">Meio de Pagamento</label>
+                    <select id="filter-method">
+                        <option value="todos">💳 Todos</option>
+                        <option value="dinheiro">💵 Dinheiro</option>
+                        <option value="pix">⚡ Pix</option>
+                        <option value="debito">💳 Débito</option>
+                        <option value="credito">💳 Crédito</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- NOVO FILTRO EXCLUSIVO: AUDITORIA ISOLADA POR BANCO/CARTÃO -->
+            <div class="form-group">
+                <label for="filter-institution">Filtrar por Banco / Cartão Específico</label>
+                <select id="filter-institution">
+                    <option value="todos">🏛️ Todos os Bancos</option>
+                    <option value="Itaú">Itaú</option>
+                    <option value="Banco do Brasil">Banco do Brasil</option>
+                    <option value="Bradesco">Bradesco</option>
+                    <option value="Santander">Santander</option>
+                    <option value="Caixa Econômica">Caixa Econômica</option>
+                    <option value="Nubank">Nubank</option>
+                    <option value="Banco Inter">Banco Inter</option>
+                    <option value="C6 Bank">C6 Bank</option>
+                    <option value="PicPay">PicPay</option>
+                    <option value="Mercado Pago">Mercado Pago</option>
+                    <option value="Outros / Carteira">Outros / Carteira</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn-submit" id="btn-apply-filters">Aplicar Filtros</button>
+        </div>
+    </div>
+
+    <!-- SLIDE LATERAL: CONFIGURAÇÃO DE TEMAS -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+    <div id="drawer-settings" class="drawer-wrapper">
+        <div class="modal-header">
+            <h3>🎨 Escolha o Tema</h3>
+            <button type="button" class="modal-close" id="close-settings-btn">&times;</button>
+        </div>
+        <div id="theme-options-container">
+            <div class="theme-option" data-theme="preto">⚫ Preto (Padrão)</div>
+            <div class="theme-option" data-theme="cinza">⚪ Cinza Grafite</div>
+            <div class="theme-option" data-theme="azul">🔵 Azul Noturno</div>
+            <div class="theme-option" data-theme="branco">⚪ Branco Gelo</div>
+            <div class="theme-option" data-theme="verde-claro">🟢 Verde Menta</div>
+        </div>
+    </div>
+    <!-- ==========================================================================
+       9. ENGENHARIA DE COMPORTAMENTO (JAVASCRIPT MODERNO ES6+)
+       ========================================================================== -->
+    <script>
+        // ==========================================================================
+        // 🧠 A. ESTADO GLOBAL E MAPEAMENTO ELEMENTAR DO DOM
+        // ==========================================================================
+        let transactions = JSON.parse(localStorage.getItem('finances_items')) || [];
+        let editingId = null;
+
+        // --- Elementos de Controle de Modais / Drawer ---
+        const modalCadastro = document.getElementById('modal-cadastro');
+        const modalFiltros = document.getElementById('modal-filtros');
+        const drawerSettings = document.getElementById('drawer-settings');
+        const drawerOverlay = document.getElementById('drawer-overlay');
+
+        // --- Elementos do Formulário ---
+        const form = document.getElementById('finance-form');
+        const formTitle = document.getElementById('form-title');
+        const btnSubmitForm = document.getElementById('btn-submit-form');
+        const btnCancelEdit = document.getElementById('btn-cancel-edit');
+        const amountInput = document.getElementById('amount');
+        const paymentType = document.getElementById('payment-type');
+        const institutionSelect = document.getElementById('institution');
+        const cardFields = document.getElementById('card-fields');
+        const isInstallment = document.getElementById('is-installment');
+        const installmentFields = document.getElementById('installment-fields');
+        const isRecurring = document.getElementById('is-recurring');
+        const recurringFields = document.getElementById('recurring-fields');
+
+        // --- Elementos de Filtragem e Renderização ---
+        const filterMonth = document.getElementById('filter-month');
+        const filterFortnight = document.getElementById('filter-fortnight');
+        const filterItem = document.getElementById('item');
+        const filterStatus = document.getElementById('filter-status');
+        const filterMethod = document.getElementById('filter-method');
+        const filterInstitution = document.getElementById('filter-institution');
+        const tableBody = document.getElementById('finance-table-body');
+
+        // --- Elementos de Métricas e Relatórios Rápidos ---
+        const totalAmountDisplay = document.getElementById('total-amount');
+        const totalPaidDisplay = document.getElementById('total-paid');
+        const totalPendingDisplay = document.getElementById('total-pending');
+        const partialSelectedAmount = document.getElementById('partial-selected-amount');
+        const partialSelectedCount = document.getElementById('partial-selected-count');
+        const highestExpenseAmount = document.getElementById('highest-expense-amount');
+        const highestExpenseDesc = document.getElementById('highest-expense-desc');
+        const freqInstitutionTitle = document.getElementById('freq-institution-title');
+        const freqInstitutionCount = document.getElementById('freq-institution-count');
+
+        // ==========================================================================
+        // 🛡️ B. SISTEMA REATIVO DE TEMAS (EXECUÇÃO IMEDIATA)
+        // ==========================================================================
+        (() => {
+            const htmlElement = document.documentElement;
+            const savedTheme = localStorage.getItem('multi-theme') || 'preto';
+            htmlElement.setAttribute('data-theme', savedTheme);
+            
+            document.querySelectorAll('.theme-option').forEach(option => {
+                if (option.dataset.theme === savedTheme) option.classList.add('theme-option--active');
+                
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('theme-option--active'));
+                    const selectedTheme = option.dataset.theme;
+                    htmlElement.setAttribute('data-theme', selectedTheme);
+                    option.classList.add('theme-option--active');
+                    localStorage.setItem('multi-theme', selectedTheme);
+                });
+            });
+        })();
+
+        // ==========================================================================
+        // 🎛️ C. ENGINE DE MODAIS E INTERFACES FLUTUANTES
+        // ==========================================================================
+        const toggleModal = (modal, open) => modal.classList.toggle('modal-overlay--open', open);
+        const toggleDrawer = (open) => drawerOverlay.classList.toggle('drawer-overlay--open', open);
+
+        document.getElementById('open-cadastro-btn').addEventListener('click', () => { disableEditMode(); toggleModal(modalCadastro, true); });
+        document.getElementById('close-cadastro-btn').addEventListener('click', () => toggleModal(modalCadastro, false));
+        
+        document.getElementById('open-filtros-btn').addEventListener('click', () => toggleModal(modalFiltros, true));
+        document.getElementById('close-filtros-btn').addEventListener('click', () => toggleModal(modalFiltros, false));
+        document.getElementById('btn-apply-filters').addEventListener('click', () => toggleModal(modalFiltros, false));
+
+        document.getElementById('open-settings-btn').addEventListener('click', () => toggleDrawer(true));
+        document.getElementById('close-settings-btn').addEventListener('click', () => toggleDrawer(false));
+        drawerOverlay.addEventListener('click', () => toggleDrawer(false));
+        // ==========================================================================
+        // 💵 D. MÁSCARAS DE ENTRADA E CONTROLADORES CONDICIONAIS REATIVOS
+        // ==========================================================================
+        if (amountInput) {
+            amountInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                value = (value / 100).toFixed(2) + '';
+                value = value.replace(".", ",").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                e.target.value = value ? 'R$ ' + value : '';
+            });
+        }
+
+        if (paymentType) {
+            paymentType.addEventListener('change', () => {
+                const isCredito = paymentType.value === 'credito';
+                cardFields.classList.toggle('hidden', !isCredito);
+                const dueDayEl = document.getElementById('due-day');
+                if (dueDayEl) dueDayEl.required = isCredito;
+                if (!isCredito) resetCreditFields();
+            });
+        }
+
+        if (isInstallment) {
+            isInstallment.addEventListener('change', () => {
+                const isSim = isInstallment.value === 'sim';
+                installmentFields.classList.toggle('hidden', !isSim);
+                const instQtyEl = document.getElementById('installments-qty');
+                if (instQtyEl) instQtyEl.required = isSim;
+            });
+        }
+
+        if (isRecurring) {
+            isRecurring.addEventListener('change', () => {
+                const isSim = isRecurring.value === 'sim';
+                recurringFields.classList.toggle('hidden', !isSim);
+                const recMonthsEl = document.getElementById('recurring-months');
+                if (recMonthsEl) recMonthsEl.required = isSim;
+            });
+        }
+
+        function resetCreditFields() {
+            const dueDayEl = document.getElementById('due-day');
+            const instQtyEl = document.getElementById('installments-qty');
+            if (dueDayEl) dueDayEl.value = '';
+            if (isInstallment) isInstallment.value = 'nao';
+            installmentFields.classList.add('hidden');
+            if (instQtyEl) instQtyEl.value = '';
+        }
+
+        // ==========================================================================
+        // 🛑 E. MOTOR DE VALIDAÇÃO ROBUSTA DE FORMULÁRIO (REQUISITO SÊNIOR)
+        // ==========================================================================
+        function clearValidationErrors() {
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+        }
+
+        function showValidationError(inputElement, message) {
+            inputElement.classList.add('input-error');
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'error-message';
+            errorSpan.innerText = message;
+            inputElement.parentElement.appendChild(errorSpan);
+        }
+
+        function validateForm() {
+            clearValidationErrors();
+            let isValid = true;
+
+            const fields = [
+                { id: 'description', label: 'Descrição' },
+                { id: 'amount', label: 'Valor' },
+                { id: 'date', label: 'Data' },
+                { id: 'institution', label: 'Banco / Instituição de Origem' }
+            ];
+
+            fields.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (!el || !el.value.trim()) {
+                    showValidationError(el, `O campo ${field.label} é de preenchimento obrigatório.`);
+                    isValid = false;
+                }
+            });
+
+            if (paymentType.value === 'credito') {
+                const dueDayEl = document.getElementById('due-day');
+                if (dueDayEl && !dueDayEl.value.trim()) {
+                    showValidationError(dueDayEl, 'Informe o dia de vencimento.');
+                    isValid = false;
+                }
+                if (isInstallment.value === 'sim') {
+                    const qtyEl = document.getElementById('installments-qty');
+                    if (qtyEl && !qtyEl.value.trim()) {
+                        showValidationError(qtyEl, 'Informe a quantidade de parcelas.');
+                        isValid = false;
+                    }
+                }
+            }
+
+            if (isRecurring.value === 'sim') {
+                const recMonthsEl = document.getElementById('recurring-months');
+                if (recMonthsEl && !recMonthsEl.value.trim()) {
+                    showValidationError(recMonthsEl, 'Informe a quantidade de meses para replicação.');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+const parsePrice = (formatted) => {
+            if (!formatted) return 0;
+            return parseFloat(formatted.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+        };
+
+        // Valida se o valor e positivo/coberto (nao negativo, nao zero)
+        function validateAmountPositive(rawAmount) {
+            clearValidationErrors();
+            let isValid = true;
+            const amountEl = document.getElementById('amount');
+
+            if (!rawAmount || rawAmount <= 0) {
+                showValidationError(amountEl, 'O valor deve ser um numero positivo (maior que zero).');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        const formatBRL = (val) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        const formatMethodText = (method, institution) => {
+            const icons = { dinheiro: '💵', pix: '⚡', debito: '✦ Deb.', credito: '💳 Cred.' };
+            return `${icons[method] || '💰'} ${institution}`;
+        };
+
+        if (filterMonth && !filterMonth.value) {
+            filterMonth.value = new Date().toISOString().slice(0, 7);
+        }
+        // ==========================================================================
+        // 📝 F. PROCESSAMENTO DE LANÇAMENTOS (SUBMIT ENGINE UNIFICADO POR BANCO)
+        // ==========================================================================
+if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!validateForm()) return;
+
+                const rawAmount = parsePrice(amountInput.value);
+                if (!validateAmountPositive(rawAmount)) return;
+                
+                const description = document.getElementById('description').value;
+                const locationValue = document.getElementById('location').value;
+                const dateValue = document.getElementById('date').value;
+                const methodSelected = paymentType.value;
+                const institution = institutionSelect.value;
+                const natureza = document.getElementById('transaction-type').value;
+
+                // --- MODO DE EDIÇÃO ---
+                if (editingId !== null) {
+                    const index = transactions.findIndex(t => t.id === editingId);
+                    if (index !== -1) {
+                        transactions[index] = {
+                            ...transactions[index],
+                            description, location: locationValue, amount: rawAmount, date: dateValue,
+                            natureza, method: methodSelected, institution, type: formatMethodText(methodSelected, institution)
+                        };
+                    }
+                    disableEditMode();
+                } 
+                // --- MODO DE CRIAÇÃO ORIGINAL ---
+                else {
+                    const baseItemsToSave = [];
+                    const hasRecurring = isRecurring.value === 'sim';
+                    const recurringQty = hasRecurring ? parseInt(document.getElementById('recurring-months').value, 10) : 0;
+                    
+                    if (methodSelected !== 'credito') {
+                        baseItemsToSave.push({
+                            id: crypto.randomUUID(), description, location: locationValue, amount: rawAmount,
+                            date: dateValue, method: methodSelected, institution, type: formatMethodText(methodSelected, institution),
+                            paid: false, natureza
+                        });
+
+                        if (hasRecurring && recurringQty > 0) {
+                            const buyDate = new Date(dateValue + 'T00:00:00');
+                            for (let i = 1; i <= recurringQty; i++) {
+                                const targetDate = new Date(buyDate);
+                                targetDate.setMonth(buyDate.getMonth() + i);
+                                baseItemsToSave.push({
+                                    id: crypto.randomUUID(),
+                                    description: `${description} [Fixo ${i}/${recurringQty}]`,
+                                    location: locationValue, amount: rawAmount,
+                                    date: targetDate.toISOString().split('T')[0],
+                                    method: methodSelected, institution, type: formatMethodText(methodSelected, institution),
+                                    paid: false, natureza
+                                });
+                            }
+                        }
+                    } else {
+                        const dueDay = parseInt(document.getElementById('due-day').value, 10) || 10;
+                        const hasInstallments = isInstallment.value === 'sim';
+                        const installmentQty = hasInstallments ? parseInt(document.getElementById('installments-qty').value, 10) : 1;
+                        const valuePerItem = hasInstallments ? (rawAmount / installmentQty) : rawAmount;
+                        const buyDate = new Date(dateValue + 'T00:00:00');
+
+                        for (let i = 0; i < installmentQty; i++) {
+                            let targetDate = new Date(buyDate);
+                            targetDate.setMonth(buyDate.getMonth() + i);
+
+                            if (buyDate.getDate() >= dueDay && i === 0) {
+                                buyDate.setMonth(buyDate.getMonth() + 1);
+                                targetDate.setMonth(buyDate.getMonth());
+                            } else if (i > 0) {
+                                targetDate = new Date(buyDate);
+                                targetDate.setMonth(buyDate.getMonth() + i);
+                            }
+
+                            const lastDayOfTargetMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
+                            targetDate.setDate(dueDay > lastDayOfTargetMonth ? lastDayOfTargetMonth : dueDay);
+
+                            baseItemsToSave.push({
+                                id: crypto.randomUUID(),
+                                description: installmentQty > 1 ? `${description} (${i + 1}/${installmentQty})` : description,
+                                location: locationValue, amount: valuePerItem, date: targetDate.toISOString().split('T')[0],
+                                method: methodSelected, institution, type: formatMethodText(methodSelected, institution),
+                                paid: false, natureza
+                            });
+                        }
+
+                        if (hasRecurring && !hasInstallments && recurringQty > 0) {
+                            for (let i = 1; i <= recurringQty; i++) {
+                                let targetDate = new Date(buyDate);
+                                targetDate.setMonth(buyDate.getMonth() + i);
+                                const lastDayOfTargetMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
+                                targetDate.setDate(dueDay > lastDayOfTargetMonth ? lastDayOfTargetMonth : dueDay);
+
+                                baseItemsToSave.push({
+                                    id: crypto.randomUUID(),
+                                    description: `${description} [Fixo ${i}/${recurringQty}]`,
+                                    location: locationValue, amount: rawAmount, date: targetDate.toISOString().split('T')[0],
+                                    method: methodSelected, institution, type: formatMethodText(methodSelected, institution),
+                                    paid: false, natureza
+                                });
+                            }
+                        }
+                    }
+                    transactions.push(...baseItemsToSave);
+                }
+                saveAndRender();
+                toggleModal(modalCadastro, false);
+            });
+        }
+
+        // ==========================================================================
+        // 🎛️ G. GERENCIAMENTO DE ESTADOS DE EDIÇÃO
+        // ==========================================================================
+        function enableEditMode(transaction) {
+            editingId = transaction.id;
+            toggleModal(modalCadastro, true);
+            if (formTitle) formTitle.innerText = "✏️ Editar Lançamento";
+            if (btnSubmitForm) { btnSubmitForm.innerText = "Salvar Alterações"; btnSubmitForm.classList.add("btn-submit--edit"); }
+            if (btnCancelEdit) btnCancelEdit.classList.remove("hidden");
+
+            document.getElementById('description').value = transaction.description;
+            document.getElementById('location').value = transaction.location || '';
+            document.getElementById('transaction-type').value = transaction.natureza;
+            document.getElementById('date').value = transaction.date;
+            institutionSelect.value = transaction.institution || '';
+            
+            isRecurring.value = 'nao';
+            isRecurring.dispatchEvent(new Event('change'));
+            
+            if (amountInput) amountInput.value = formatBRL(transaction.amount);
+            if (paymentType) {
+                paymentType.value = transaction.method || 'dinheiro';
+                paymentType.dispatchEvent(new Event('change'));
+                if (transaction.method === 'credito' && transaction.date) {
+                    const dueDayEl = document.getElementById('due-day');
+                    if (dueDayEl) dueDayEl.value = parseInt(transaction.date.split('-')[2], 10);
+                }
+            }
+        }
+
+        function disableEditMode() {
+            editingId = null;
+            clearValidationErrors();
+            if (formTitle) formTitle.innerText = "✍️ Novo Lançamento";
+            if (btnSubmitForm) { btnSubmitForm.innerText = "Adicionar Lançamento"; btnSubmitForm.classList.remove("btn-submit--edit"); }
+            if (btnCancelEdit) btnCancelEdit.classList.add("hidden");
+            if (form) form.reset();
+            if (paymentType) paymentType.dispatchEvent(new Event('change'));
+            if (isRecurring) isRecurring.dispatchEvent(new Event('change'));
+        }
+
+        if (btnCancelEdit) {
+            btnCancelEdit.addEventListener('click', () => { disableEditMode(); toggleModal(modalCadastro, false); });
+        }
+        // ==========================================================================
+        // 🔄 H. ENGINE DE RENDERIZAÇÃO, RELATÓRIOS E ISOLAMENTO BANCÁRIO
+        // ==========================================================================
+        const saveAndRender = () => {
+            localStorage.setItem('finances_items', JSON.stringify(transactions));
+            renderTable();
+        };
+
+        function renderTable() {
+            if (!tableBody || !filterMonth || !filterFortnight || !filterStatus || !filterMethod || !filterInstitution) return;
+            
+            tableBody.innerHTML = '';
+            let totalReceitas = 0;
+            let totalDespesas = 0;
+            let maxExpenseVal = 0;
+            let maxExpenseDescription = '—';
+            const institutionFrequencyMap = {};
+            
+            const monthVal = filterMonth.value;
+            if (!monthVal) return;
+            const [yearFilter, monthFilter] = monthVal.split('-');
+            
+            const fortnightFilter = filterFortnight.value;
+            const statusFilter = filterStatus.value;
+            const methodFilter = filterMethod.value;
+            const bankFilter = filterInstitution.value; // Filtro por Banco / Cartão
+            const textFilter = filterItem ? filterItem.value.toLowerCase().trim() : '';
+
+            // --- ALGORITMO DE FILTRAGEM BANCÁRIA MULTICRITÉRIO ---
+            const filteredItems = transactions.filter(item => {
+                if (!item.date || typeof item.date !== 'string') return false;
+
+                // 1. Filtro Concorrente por Palavra-Chave
+                if (textFilter) {
+                    const matchDesc = item.description && item.description.toLowerCase().includes(textFilter);
+                    const matchLoc = item.location && item.location.toLowerCase().includes(textFilter);
+                    if (!matchDesc && !matchLoc) return false;
+                }
+
+                // 2. Filtro por Situação de Liquidação
+                if (statusFilter !== 'todos') {
+                    const isPaid = item.paid === true;
+                    if (statusFilter === 'pago' && !isPaid) return false;
+                    if (statusFilter === 'pendente' && isPaid) return false;
+                }
+
+                // 3. Filtro por Meio de Pagamento
+                if (methodFilter !== 'todos' && item.method !== methodFilter) return false;
+
+                // 4. NOVO: Filtro de Isolamento para Análise Corporativa do Cartão / Banco
+                if (bankFilter !== 'todos' && item.institution !== bankFilter) return false;
+
+                // 5. Divisão Cronológica (Mensal, Quinzena, Histórico Anual)
+                const [itemYear, itemMonth, itemDay] = item.date.split('-');
+                if (fortnightFilter === 'anual') {
+                    return itemYear === yearFilter;
+                }
+                
+                if (itemYear !== yearFilter || itemMonth !== monthFilter) return false;
+                if (fortnightFilter === 'todos') return true;
+                
+                return fortnightFilter === '1' ? (parseInt(itemDay, 10) <= 15) : (parseInt(itemDay, 10) >= 16);
+            });
+
+            // Ordenação Cronológica Estável (Mais Recentes no Topo do Extrato)
+            filteredItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // --- INJEÇÃO DINÂMICA DE LINHAS COM SELETOR DE CONCILIAÇÃO ---
+            filteredItems.forEach(item => {
+                const isReceita = item.natureza === 'receita';
+                
+                if (isReceita) {
+                    totalReceitas += item.amount;
+                } else {
+                    totalDespesas += item.amount;
+                    if (item.amount > maxExpenseVal) {
+                        maxExpenseVal = item.amount;
+                        maxExpenseDescription = item.description;
+                    }
+                }
+
+                if (item.institution && item.institution !== '') {
+                    const instName = item.institution;
+                    institutionFrequencyMap[instName] = (institutionFrequencyMap[instName] || 0) + 1;
+                }
+
+                const [y, m, d] = item.date.split('-');
+                const tr = document.createElement('tr');
+                if (item.paid) tr.classList.add('row-paid');
+
+                tr.innerHTML = `
+                    <td class="text-center">
+                        <input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} data-id="${item.id}">
+                    </td>
+                    <td style="font-weight: 500;">${item.description}</td>
+                    <td style="color: var(--txt-muted);">${item.location || '—'}</td>
+                    <td>${d}/${m}/${y}</td>
+                    <td>
+                        <div class="origin-cell-wrapper">
+                            <!-- NOVO: Checkbox parcial para cálculo de soma dinâmica em lote -->
+                            <input type="checkbox" class="checkbox-partial" data-id="${item.id}">
+                            <span style="color: var(--txt-muted); font-size: 0.85rem;">${item.type}</span>
+                        </div>
+                    </td>
+                    <td class="col-amount ${item.paid ? '' : (isReceita ? 'txt-receita' : 'txt-despesa')}">
+                        ${isReceita ? '+ ' : ''}${formatBRL(item.amount)}
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button type="button" class="btn-edit" data-id="${item.id}">✏️</button>
+                            <button type="button" class="btn-delete" data-id="${item.id}">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // Processamento Estatístico do Banco Mais Utilizado
+            let mostFreqInstitution = '—';
+            let mostFreqCount = 0;
+            for (const [inst, count] of Object.entries(institutionFrequencyMap)) {
+                if (count > mostFreqCount) { mostFreqCount = count; mostFreqInstitution = inst; }
+            }
+
+            // Atualização dos Painéis Principais
+            const balanco = totalReceitas - totalDespesas;
+            if (totalAmountDisplay) { totalAmountDisplay.innerText = formatBRL(balanco); totalAmountDisplay.style.color = balanco >= 0 ? 'var(--green)' : 'var(--red)'; }
+            if (totalPaidDisplay) totalPaidDisplay.innerText = formatBRL(totalReceitas);
+            if (totalPendingDisplay) totalPendingDisplay.innerText = formatBRL(totalDespesas);
+            if (highestExpenseAmount) highestExpenseAmount.innerText = formatBRL(maxExpenseVal);
+            if (highestExpenseDesc) highestExpenseDesc.innerText = maxExpenseDescription;
+            if (freqInstitutionTitle) freqInstitutionTitle.innerText = mostFreqInstitution;
+            if (freqInstitutionCount) freqInstitutionCount.innerText = `${mostFreqCount} lançamento(s)`;
+
+            // Zera visualmente a métrica parcial a cada re-renderização por segurança
+            calculatePartialSelected();
+        }
+        // ==========================================================================
+        // 🧮 I. ALGORITMO REATIVO DE SOMA PARCIAL DINÂMICA (CONCILIAÇÃO)
+        // ==========================================================================
+        function calculatePartialSelected() {
+            let totalParcial = 0;
+            let countParcial = 0;
+            
+            document.querySelectorAll('.checkbox-partial:checked').forEach(chk => {
+                const item = transactions.find(t => t.id === chk.dataset.id);
+                if (item) {
+                    if (item.natureza === 'receita') {
+                        totalParcial += item.amount;
+                    } else {
+                        totalParcial -= item.amount;
+                    }
+                    countParcial++;
+                }
+            });
+
+            if (partialSelectedAmount) partialSelectedAmount.innerText = formatBRL(totalParcial);
+            if (partialSelectedCount) partialSelectedCount.innerText = `${countParcial} item(ns) marcado(s)`;
+        }
+
+        // ==========================================================================
+        // ⚡ J. PATTERN DE DELEGAÇÃO DE EVENTOS OTIMIZADA (EVENT DELEGATION)
+        // ==========================================================================
+        if (tableBody) {
+            // Escutador unificado para mudanças (Checkboxes)
+            tableBody.addEventListener('change', (e) => {
+                // 1. Controle do Checkbox de Liquidação (Pago / Pendente)
+                if (e.target.classList.contains('checkbox-paid')) {
+                    const transactionId = e.target.dataset.id;
+                    const targetTransaction = transactions.find(t => t.id === transactionId);
+                    if (targetTransaction) {
+                        targetTransaction.paid = e.target.checked;
+                        saveAndRender();
+                    }
+                }
+                
+                // 2. Controle do Novo Checkbox Parcial (Soma Dinâmica de Itens Selecionados)
+                if (e.target.classList.contains('checkbox-partial')) {
+                    calculatePartialSelected();
+                }
+            });
+
+            // Escutador unificado para cliques (Editar / Excluir)
+            tableBody.addEventListener('click', (e) => {
+                const transactionId = e.target.dataset.id;
+                if (e.target.classList.contains('btn-edit')) {
+                    const targetTransaction = transactions.find(t => t.id === transactionId);
+                    if (targetTransaction) enableEditMode(targetTransaction);
+                }
+                if (e.target.classList.contains('btn-delete')) {
+                    if (confirm("Deseja realmente excluir este lançamento permanentemente?")) {
+                        transactions = transactions.filter(t => t.id !== transactionId);
+                        if (editingId === transactionId) disableEditMode();
+                        saveAndRender();
+                    }
+                }
+            });
+        }
+
+        // --- ATIVAÇÃO DOS ESCUTADORES REATIVOS DOS FILTROS ---
+        [filterMonth, filterFortnight, filterItem, filterStatus, filterMethod, filterInstitution].forEach(el => {
+            if (el) el.addEventListener('input', renderTable);
+        });
+
+        // ==========================================================================
+        // 💾 K. ENGENHARIA DE BACKUP (SISTEMA DE EXPORTAÇÃO E IMPORTAÇÃO TXT)
+        // ==========================================================================
+        const escapeTXT = (val) => {
+            if (val === null || val === undefined) return '';
+            let stringVal = String(val);
+            if (stringVal.includes(';') || stringVal.includes('"') || stringVal.includes('\n')) {
+                stringVal = '"' + stringVal.replace(/"/g, '""') + '"';
+            }
+            return stringVal;
+        };
+
+        const btnExport = document.getElementById('btn-export-backup');
+        if (btnExport) {
+            btnExport.addEventListener('click', () => {
+                if (transactions.length === 0) {
+                    alert('Não há dados para exportar.');
+                    return;
+                }
+                const headers = ['id', 'description', 'location', 'amount', 'date', 'type', 'paid', 'natureza', 'method', 'institution'];
+                const txtRows = transactions.map(item => headers.map(h => escapeTXT(item[h])).join(';'));
+                const txtContent = [headers.join(';'), ...txtRows].join('\n');
+                
+                const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), txtContent], { type: 'application/octet-stream;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", url);
+                downloadAnchor.setAttribute("download", `backup_financas_v3_${new Date().toISOString().slice(0, 10)}.txt`);
+                downloadAnchor.style.display = 'none';
+                document.body.appendChild(downloadAnchor);
+                
+                downloadAnchor.click();
+                setTimeout(() => { downloadAnchor.remove(); URL.revokeObjectURL(url); }, 100);
+            });
+        }
+
+        const importTrigger = document.getElementById('btn-import-trigger');
+        const fileInput = document.getElementById('file-import-backup');
+
+        if (importTrigger && fileInput) {
+            importTrigger.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (!files || files.length === 0) return;
+                const file = files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    try {
+                        const text = event.target.result;
+                        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+                        if (lines.length <= 1) { alert('O arquivo TXT selecionado está vazio ou incorreto.'); return; }
+                        
+                        const headers = lines[0].replace(/^\uFEFF/, '').split(';');
+                        const importedTransactions = [];
+
+                        for (let i = 1; i < lines.length; i++) {
+                            const rowData = lines[i].split(';');
+                            if (rowData.length < headers.length) continue;
+                            const item = {};
+                            headers.forEach((header, index) => {
+                                let val = rowData[index].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                                if (header === 'amount') val = parseFloat(val) || 0;
+                                if (header === 'paid') val = (val === 'true');
+                                item[header] = val;
+                            });
+                            importedTransactions.push(item);
+                        }
+
+                        if (importedTransactions.length > 0 && confirm(`Deseja importar ${importedTransactions.length} transações? Isso substituirá seus dados atuais.`)) {
+                            transactions = importedTransactions;
+                            disableEditMode();
+                            saveAndRender();
+                            alert('Dados importados com sucesso a partir do TXT!');
+                        }
+                    } catch (err) { alert('Erro crítico ao processar o arquivo TXT.'); }
+                };
+                reader.readAsText(file, 'UTF-8');
+                fileInput.value = '';
+            });
+        }
+
+        // ==========================================================================
+        // 🚀 L. BOOTSTRAP / DISPARO INICIAL DO ECOSSISTEMA
+        // ==========================================================================
+        document.addEventListener('DOMContentLoaded', () => { 
+            renderTable(); 
+                if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('Vsouza pronto para uso Offline!'))
+      .catch((err) => console.log('Erro ao ativar modo offline:', err));
+  });
+      }
+        });
+
+
+    </script>
+</body>
+</html>
+
+
